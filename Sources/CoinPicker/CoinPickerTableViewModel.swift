@@ -10,14 +10,14 @@ import Network
 
 // MARK: - Delegate
 
-protocol CoinPickerTableViewModelDelegate: class {
+protocol CoinPickerTableViewModelDelegate: AnyObject {
     func onFetchCompleted()
     func onFetchFailed(error: Error)
 }
 
 // MARK: - Object
 
-final class CoinPickerTableViewModel: NSObject {
+final class CoinPickerTableViewModel {
     
     // MARK: - Private
     
@@ -56,9 +56,8 @@ final class CoinPickerTableViewModel: NSObject {
     // MARK: - Functions
     
     func fetchSymbols() {
-        Networking.getData(
-            url: URL(string: "https://api.coincap.io/v2/assets?limit=100")!
-        ) { data, response, error -> Void in
+        
+        HTTP.get(url: URL(string: "https://api.coincap.io/v2/assets?limit=100")!) { data, response, error -> Void in
             do {
                 let json = try JSONSerialization.jsonObject(with: data!) as! Dictionary<String, Any>
                 guard let data = json["data"] as? [[String: Any]] else {
